@@ -24,26 +24,27 @@ public class MyPolygon {
     public ArrayList<LatLng> points = new ArrayList<>();
     private MyUtil util = new MyUtil();
 
+    /**
+     * Defines the polygon style and points.
+     */
     public PolygonOptions options = new PolygonOptions()
             .strokeColor(0xFF00AA00)
             .fillColor(0x2200FFFF)
             .strokeWidth(2);
 
-    public LatLng minLng;
-    public LatLng minLat;
-    public LatLng maxLng;
-    public LatLng maxLat;
+    /**
+     * The minimum and maximum longitude and latitude points of the polygon.
+     */
+    private Double minLng;
+    private Double minLat;
+    private Double maxLng;
+    private Double maxLat;
 
 //-------------------------------------------------------------------------------------------------
 
     public void updatePolygonPoints(List<LatLng> geometryPoints) {
         points.addAll(geometryPoints);
-
-        options
-                .strokeColor(0xFF00AA00)
-                .fillColor(0x2200FFFF)
-                .addAll(points)
-                .strokeWidth(2);
+        options.addAll(points);
     }
 
 //-------------------------------------------------------------------------------------------------
@@ -53,28 +54,35 @@ public class MyPolygon {
      *
      * @param p : The LatLng point.
      * @return true if the point lays inside the polygon, or false if it doesn't.
+     *
+     * Resource and credits:
+     * https://stackoverflow.com/questions/217578/how-can-i-determine-whether-a-2d-point-is-within-a-polygon
      */
     public boolean isPointInsidePolygon(LatLng p) {
 
-        if (points == null || points.size() < 3) {
+        if (points.size() < 3) {
             return false;
         }
 
-        double minX = points.get(0).longitude;
-        double maxX = points.get(0).longitude;
-        double minY = points.get(0).latitude;
-        double maxY = points.get(0).latitude;
+        if (minLat == null) {
+            // The min. and max. latitude and longitude points have not been updated yet
 
-        for (int i = 1; i < points.size(); i++) {
-            LatLng point = points.get(i);
+            minLng = points.get(0).longitude;
+            maxLng = points.get(0).longitude;
+            minLat = points.get(0).latitude;
+            maxLat = points.get(0).latitude;
 
-            minX = Math.min(point.longitude, minX);
-            maxX = Math.max(point.longitude, maxX);
-            minY = Math.min(point.latitude, minY);
-            maxY = Math.max(point.latitude, maxY);
+            for (int i = 1; i < points.size(); i++) {
+                LatLng point = points.get(i);
+
+                minLng = Math.min(point.longitude, minLng);
+                maxLng = Math.max(point.longitude, maxLng);
+                minLat = Math.min(point.latitude, minLat);
+                maxLat = Math.max(point.latitude, maxLat);
+            }
         }
 
-        if (p.longitude < minX || p.longitude > maxX || p.latitude < minY || p.latitude > maxY) {
+        if (p.longitude < minLng || p.longitude > maxLng || p.latitude < minLat || p.latitude > maxLat) {
             // The point is outside the bounding rectangle of the polygon
             return false;
         }
@@ -99,6 +107,9 @@ public class MyPolygon {
      *
      * @param point : The LatLng point to compute.
      * @return The LatLng nearest point on the given polygon.
+     *
+     * Source and credits:
+     * https://stackoverflow.com/a/36105498/5597366
      */
     public LatLng getNearestPointOnPolygonFromPoint(@NonNull LatLng point) {
         double minimumDistance = -1;
