@@ -1,6 +1,5 @@
 package com.example.hanoc_000.hanochmap;
 
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -12,8 +11,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.data.Geometry;
 import com.google.maps.android.data.kml.KmlContainer;
 import com.google.maps.android.data.kml.KmlLayer;
@@ -118,6 +115,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 //-------------------------------------------------------------------------------------------------
 
+    /**
+     * Extracts the polygon points from the map layer.
+     * Only generating the polygon if it is wasn't generated before.
+     */
     public void generatePolygonFromLayer(@NonNull KmlLayer layer) {
         if (polygon == null) {
             polygon = new MyPolygon();

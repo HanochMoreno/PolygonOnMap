@@ -78,6 +78,10 @@ public class MyUtil {
 
     /**
      * Round a double to 2 decimal places
+     *
+     * Resource and credit:
+     * https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places
+     * https://stackoverflow.com/a/2808648/5597366
      */
     public static double roundDouble(double value) {
 
